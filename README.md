@@ -77,6 +77,25 @@ This class is a representation of a particle in a 2D space. It contains properti
 - `ParticleOutOfBounds`: An event that is raised when the particle goes out of bounds. The event handler receives the particle and the location of the out of bounds event as a `BoundLocation` enum value.
 - `ParticleCollide`: An event that is raised when the particle collides with a boundary. The event handler receives the particle and the location of the collision as a `BoundLocation` enum value.
 
+```csharp
+ static void Main(string[] args)
+ {
+   Particle particle = new Particle();
+   particle.ParticleCollide += Particle_ParticleCollided;
+   particle.ParticleOutOfBounds += Particle_ParticleOutOfBounds;
+ }
+
+ private static void Particle_ParticleCollided(Particle Particle, BoundLocation bLoc)
+ {
+   
+ }
+ 
+  private static void Particle_ParticleOutOfBounds(Particle Particle, BoundLocation bLoc)
+ {
+   
+ }
+```
+
 ## Enums
 
 - `BoundLocation`: An enum representing the possible locations of a boundary. The values are `Top`, `Bottom`, `Left`, and `Right`.
