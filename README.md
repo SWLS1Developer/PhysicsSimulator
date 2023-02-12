@@ -55,9 +55,9 @@ A C# class representing a mathematical vector with 2 components (X and Y) and pr
  Console.WriteLine("Vector v6 (v5 / 2): " + v6.X + ", " + v6.Y);
  Console.WriteLine("Angle of v6: " + v6.Angle);
  Console.WriteLine("Length of v6: " + v6.Length);
-            ```
+ ```
             
-            # Class: Particle
+# Class: Particle
 
 This class is a representation of a particle in a 2D space. It contains properties such as position, velocity, gravity, and mass, as well as methods for simulating physical interactions such as acceleration and collision detection. 
 
