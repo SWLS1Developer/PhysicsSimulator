@@ -23,7 +23,7 @@ A C# class representing a mathematical vector with 2 components (X and Y) and pr
 - `MultiplyBy(double Value)`: Multiplies the current Vector instance with the given scalar.
 - `DivideBy(double Value)`: Divides the current Vector instance by the given scalar.
 
-# Example Usage of Vector Class
+## Example
 
 ```csharp
  Vector v1 = new Vector(3, 4);
