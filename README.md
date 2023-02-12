@@ -56,3 +56,48 @@ A C# class representing a mathematical vector with 2 components (X and Y) and pr
  Console.WriteLine("Angle of v6: " + v6.Angle);
  Console.WriteLine("Length of v6: " + v6.Length);
             ```
+            
+            # Class: Particle
+
+This class is a representation of a particle in a 2D space. It contains properties such as position, velocity, gravity, and mass, as well as methods for simulating physical interactions such as acceleration and collision detection. 
+
+## Properties
+
+- `Position`: A `Vector` representing the particle's current position in the 2D space.
+- `Velocity`: A `Vector` representing the particle's current velocity.
+- `Gravity`: A `double` representing the particle's gravity in the Y direction. This value can be set and retrieved using the getter and setter.
+- `Data`: An `object` property that can be used to store any additional information associated with the particle.
+- `Mass`: A `double` representing the particle's mass.
+- `Radius`: A `double` representing the particle's radius.
+- `Boundry`: A `SizeF` representing the boundaries of the 2D space in which the particle exists.
+- `Bounce`: A `double` representing the particle's bounce factor when it collides with a boundary.
+
+## Events
+
+- `ParticleOutOfBounds`: An event that is raised when the particle goes out of bounds. The event handler receives the particle and the location of the out of bounds event as a `BoundLocation` enum value.
+- `ParticleCollide`: An event that is raised when the particle collides with a boundary. The event handler receives the particle and the location of the collision as a `BoundLocation` enum value.
+
+## Enums
+
+- `BoundLocation`: An enum representing the possible locations of a boundary. The values are `Top`, `Bottom`, `Left`, and `Right`.
+
+## Constructor
+
+The `Particle` class has a constructor that takes in the following parameters:
+
+- `XComp`: A `double` representing the X component of the particle's initial position.
+- `YComp`: A `double` representing the Y component of the particle's initial position.
+- `Speed`: A `double` representing the particle's initial speed.
+- `Direction`: A `double` representing the particle's initial direction in radians.
+- `Gravity` (optional): A `double` representing the particle's initial gravity in the Y direction. The default value is `0.0d`.
+
+## Methods
+
+- `Accelerate`: A method that takes in a `Vector` representing the acceleration and adds it to the particle's velocity.
+- `Update`: A method that updates the particle's position and velocity based on its current velocity and gravity. It also checks for out of bounds and collisions if the boundaries have been set.
+- `AngleTo`: A method that returns the angle in radians between the particle and another particle.
+- `DistanceTo`: A method that returns the distance between the particle and another particle.
+- `GravitateTo`: A method that causes the particle to gravitate towards another particle based on their masses and distance.
+- `WithBoundry`: A method that sets the boundaries of the 2D space in which the particle exists.
+- `CheckBoundry`: A private method that checks if the particle is out of bounds and raises the `ParticleOutOfBounds` event if necessary.
+- `CheckCollisions`: A private method that checks if the particle has collided with a boundary and raises the `ParticleCollide` event if necessary.
