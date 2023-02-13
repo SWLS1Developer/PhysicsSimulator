@@ -1,176 +1,97 @@
 using System;
-using System.Diagnostics;
-using System.Drawing;
 
-public class Particle
+public class Vector
 {
-    public Vector Position;
-    public Vector Velocity;
-    public double Gravity
+    private double _x, _y;
+    public double X
     {
-        get { return _g.Y; }
+        get
+        {
+            return _x;
+        }
         set
         {
-            if (_g == null)
-                _g = new Vector(0, value);
-            else
-                _g.Y = value;
+            _x = value;
         }
     }
-    public object Data;
-    public double Mass;
-    public double Radius;
-    public SizeF Boundry;
-    public double Bounce;
-
-    public delegate void ParticleOutOfBoundsEventHandler(Particle particle, BoundLocation BState);
-    public delegate void ParticleCollisionEventHandler(Particle particle, BoundLocation BState);
-    public event ParticleOutOfBoundsEventHandler ParticleOutOfBounds;
-    public event ParticleCollisionEventHandler ParticleCollide;
-
-    private Vector _g = null;
-
-    public enum BoundLocation
+    public double Y
     {
-        Top = 0,
-        Bottom = 1,
-        Left = 2,
-        Right = 3
-    }
-
-    public Particle(double XComp, double YComp, double Speed, double Direction, double Gravity = 0.0d)
-    {
-        this.Position = new Vector(XComp, YComp);
-        this.Velocity = new Vector(0, 0);
-        this.Velocity.Length = Speed;
-        this.Velocity.Angle = Direction;
-        this._g = new Vector(0, Gravity);
-        this.Mass = 1;
-        this.Radius = 0;
-        this.Boundry = new SizeF(0, 0);
-        this.Bounce = 0;
-    }
-
-    public void Accelerate(Vector AccelerationVector)
-    {
-        this.Velocity.AddTo(AccelerationVector);
-    }
-
-    public void Update(bool CheckBoundry = false)
-    {
-        if (!(this.Boundry.Width <= 0 || this.Boundry.Height <= 0))
+        get
         {
-            this.CheckBoundry(CheckBoundry);
-            this.CheckCollisions();
+            return _y;
         }
-
-        this.Velocity.AddTo(_g);
-        this.Position.AddTo(this.Velocity);
-    }
-
-    public double AngleTo(Particle p2) => Math.Atan2(p2.Position.Y - this.Position.Y, p2.Position.X - this.Position.X);
-    public double DistanceTo(Particle p2)
-    {
-        var dx = p2.Position.X - this.Position.X;
-        var dy = p2.Position.Y - this.Position.Y;
-
-        return Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
-    }
-    public void GravitateTo(Particle p2)
-    {
-        var grav = new Vector(0, 0);
-        var dist = this.DistanceTo(p2);
-
-        grav.Length = (p2.Mass / (dist * dist));
-        grav.Angle = this.AngleTo(p2);
-
-        this.Velocity.AddTo(grav);
-    }
-    public void WithBoundry(double W, double H)
-    {
-        this.Boundry.Width = (float)W;
-        this.Boundry.Height = (float)H;
-    }
-    private void CheckBoundry(bool tAction = true)
-    {
-        if (this.Position.X - this.Radius > this.Boundry.Width)
+        set
         {
-            if (ParticleOutOfBounds != null)
-                ParticleOutOfBounds(this, BoundLocation.Right);
-
-            if (tAction)
-                this.Position.X = -this.Radius;
-        }
-        if (this.Position.Y - this.Radius > this.Boundry.Height)
-        {
-            if (ParticleOutOfBounds != null)
-                ParticleOutOfBounds(this, BoundLocation.Bottom);
-
-            if (tAction)
-                this.Position.Y = -this.Radius;
-        }
-        if (this.Position.X + this.Radius < 0)
-        {
-            if (ParticleOutOfBounds != null)
-                ParticleOutOfBounds(this, BoundLocation.Left);
-
-            if (tAction) 
-                this.Position.X = this.Boundry.Width + this.Radius;
-        }
-        if (this.Position.Y + this.Radius < 0)
-        {
-            if (ParticleOutOfBounds != null)
-                ParticleOutOfBounds(this, BoundLocation.Top);
-
-            if (tAction)
-                this.Position.Y = this.Boundry.Height + this.Radius;
+            _y = value;
         }
     }
-    private void CheckCollisions()
+    public double Angle
     {
-        if (this.Position.X + this.Radius >= this.Boundry.Width)
+        get
         {
-            if (ParticleCollide != null)
-                ParticleCollide(this, BoundLocation.Right);
-
-            if (this.Bounce != 0)
-            {
-                this.Position.X = this.Boundry.Width - this.Radius;
-                this.Velocity.X *= this.Bounce;
-            }
+            return Math.Atan2(_y, _x);
         }
-        if (this.Position.Y + this.Radius >= this.Boundry.Height)
+        set
         {
-            if (ParticleCollide != null)
-                ParticleCollide(this, BoundLocation.Bottom);
-
-            if (this.Bounce != 0)
-            {
-                this.Position.Y = this.Boundry.Height - this.Radius;
-                this.Velocity.Y *= this.Bounce;
-            }
+            double len = this.Length;
+            _x = Math.Cos(value) * len;
+            _y = Math.Sin(value) * len;
         }
-        if (this.Position.X - this.Radius <= 0)
+    }
+    public double Length
+    {
+        get
         {
-            if (ParticleCollide != null)
-                ParticleCollide(this, BoundLocation.Left);
-
-            if (this.Bounce != 0)
-            {
-                this.Position.X = this.Radius;
-                this.Velocity.X *= this.Bounce;
-            }
+            return Math.Sqrt(Math.Pow(_x, 2) + Math.Pow(_y, 2));
         }
-        if (this.Position.Y - this.Radius <= 0)
+        set
         {
-            if (ParticleCollide != null)
-                ParticleCollide(this, BoundLocation.Top);
-
-            if (this.Bounce != 0)
-            {
-                this.Position.Y = this.Radius;
-                this.Velocity.Y *= this.Bounce;
-            }
+            var angle = this.Angle;
+            _x = Math.Cos(angle) * value;
+            _y = Math.Sin(angle) * value;
         }
+    }
+    public int iX
+    {
+        get { return (int)_x; }
+    }
+    public int iY
+    {
+        get { return (int)_y; }
+    }
+
+    public Vector(double XComp, double YComp)
+    {
+        this.X = XComp;
+        this.Y = YComp;
+    }
+
+    public static Vector operator +(Vector v1, Vector v2) => new Vector(v1.X + v2.X, v1.Y + v2.Y);
+    public static Vector operator -(Vector v1, Vector v2) => new Vector(v1.X - v2.X, v1.Y - v2.Y);
+    public static Vector operator *(Vector v1, double multiplier) => new Vector(v1.X * multiplier, v1.Y * multiplier);
+    public static Vector operator /(Vector v1, double d) => new Vector(v1.X / d, v1.Y / d);
+
+    public void AddTo(Vector V)
+    {
+        this._x += V.X;
+        this._y += V.Y;
+    }
+
+    public void SubtractFrom(Vector V)
+    {
+        this._x -= V.X;
+        this._y -= V.Y;
+    }
+
+    public void MultiplyBy(double Value)
+    {
+        this._x *= Value;
+        this._y *= Value;
+    }
+
+    public void DivideBy(double Value)
+    {
+        this._x /= Value;
+        this._y /= Value;
     }
 }
